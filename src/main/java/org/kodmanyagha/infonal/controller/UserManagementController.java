@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.kodmanyagha.infonal.data.InfonalDataAccess;
 import org.kodmanyagha.infonal.model.ResponseJson;
 import org.kodmanyagha.infonal.model.Status;
 import org.kodmanyagha.infonal.model.User;
@@ -12,6 +13,7 @@ import org.kodmanyagha.infonal.model.userinput.AddUserForm;
 import org.kodmanyagha.infonal.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,6 +28,13 @@ import com.google.gson.Gson;
 @RequestMapping("/ajax/userManagement")
 public class UserManagementController {
   private static final Logger logger = LoggerFactory.getLogger(UserManagementController.class);
+
+  private InfonalDataAccess infonalDataAccess;
+
+  @Autowired
+  public void setInfonalDataAccess(InfonalDataAccess infonalDataAccess) {
+    this.infonalDataAccess = infonalDataAccess;
+  }
 
   @RequestMapping(value = "/getAllUsers.do", method = RequestMethod.GET)
   public String getAllUsers(Model model) {
@@ -52,10 +61,23 @@ public class UserManagementController {
     return "json";
   }
 
+  @RequestMapping(value = "/testMethod.do", method = RequestMethod.GET)
+  public String testMethod(Model model) {
+    List<String> exampleList = new ArrayList<>();
+    if (this.infonalDataAccess == null)
+      exampleList.add("infonalDataAccess is null");
+    else
+      exampleList.add(this.infonalDataAccess.getExampleString());
+
+    model.addAttribute("data", new Gson().toJson(exampleList));
+
+    return "json";
+  }
+
   @RequestMapping(value = "/addUser.do", method = RequestMethod.POST)
   public String addUser(@ModelAttribute("addUserInfo") AddUserForm userInfo, Model model,
       HttpSession session) {
-    logger.debug("Incoming message: " + userInfo);
+    logger.debug("---Incoming message: " + userInfo);
 
     String captchaExpected =
         (String) session.getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);

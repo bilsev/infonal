@@ -8,4 +8,7 @@ package org.kodmanyagha.infonal.data;
  */
 public class InfonalDataAccess {
 
+  public String getExampleString() {
+    return "hello world injector and data access";
+  }
 }
