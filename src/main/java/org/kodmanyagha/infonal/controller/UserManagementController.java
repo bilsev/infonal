@@ -9,9 +9,7 @@ import org.kodmanyagha.infonal.data.InfonalDataAccess;
 import org.kodmanyagha.infonal.data.driver.exception.DBConnectionException;
 import org.kodmanyagha.infonal.model.ResponseJson;
 import org.kodmanyagha.infonal.model.Status;
-import org.kodmanyagha.infonal.model.User;
 import org.kodmanyagha.infonal.model.userinput.AddUserForm;
-import org.kodmanyagha.infonal.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,8 @@ public class UserManagementController {
   public void setInfonalDataAccess(InfonalDataAccess infonalDataAccess) {
     this.infonalDataAccess = infonalDataAccess;
 
+    logger.debug("--- setting infonal data access object");
+
     try {
       this.infonalDataAccess.connect();
     } catch (DBConnectionException ex) {
@@ -45,22 +45,19 @@ public class UserManagementController {
 
   @RequestMapping(value = "/getAllUsers.do", method = RequestMethod.GET)
   public String getAllUsers(Model model) {
-    logger.debug("Returning all users");
+    ResponseJson response = new ResponseJson();
 
-    List<User> users = new ArrayList<>();
-    User user = null;
-    for (int i = 0; i < 5; i++) {
-      user = new User();
-      user.setFirstname("Name" + i);
-      user.setLastname("lastname" + i);
-      user.setId(i);
-      user.setPhone("537 123 " + StringUtil.intToString(i, 2) + " "
-          + StringUtil.intToString(i + 3, 2));
-      users.add(user);
+    if (!infonalDataAccess.getDbDriver().isConnected()) {
+      logger.error("--- Not connected to database");
+
+      response.setStatus(Status.ERROR);
+      response.setData("Not connected to database");
+      model.addAttribute("data", new Gson().toJson(response));
+
+      return "json";
     }
 
-    ResponseJson response = new ResponseJson();
-    response.setData(users);
+    response.setData(infonalDataAccess.getUsers());
     response.setStatus(Status.OK);
 
     model.addAttribute("data", new Gson().toJson(response));
@@ -74,7 +71,7 @@ public class UserManagementController {
     if (this.infonalDataAccess == null)
       exampleList.add("infonalDataAccess is null");
     else
-      exampleList.add(this.infonalDataAccess.getExampleString());
+      exampleList.add(this.infonalDataAccess.getConnectionString());
 
     model.addAttribute("data", new Gson().toJson(exampleList));
 

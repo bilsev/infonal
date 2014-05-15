@@ -63,7 +63,7 @@
 		<button id="create-user">Yeni Kullanıcı Oluştur</button>
 
 	</div>
-	<div class="modal"></div>
+	<div id="divModalMessage"></div>
 	
 </body>
 </html>

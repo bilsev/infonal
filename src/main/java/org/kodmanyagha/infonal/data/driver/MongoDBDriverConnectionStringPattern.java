@@ -15,4 +15,9 @@ public enum MongoDBDriverConnectionStringPattern {
   MongoDBDriverConnectionStringPattern(String strPattern) {
     this.pattern = strPattern;
   }
+
+  public String getPattern() {
+    return pattern;
+  }
+
 }

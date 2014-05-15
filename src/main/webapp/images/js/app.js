@@ -21,6 +21,20 @@ function fillUsers() {
 					"</tr>" );
 			});
 		}
+		else {
+			$("#divModalMessage").html("<p><strong>"+ data.data +"</strong></p>");
+			$("#divModalMessage").dialog({
+				modal: true,
+				height: 300,
+				width: 500,
+				buttons: {
+					"Tamam": function() {
+						$("#divModalMessage").html();
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		}
 	});
 }
 
