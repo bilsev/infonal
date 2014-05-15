@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.kodmanyagha.infonal.data.InfonalDataAccess;
-import org.kodmanyagha.infonal.data.driver.exception.DBConnectionException;
+import org.kodmanyagha.infonal.data.exception.DBConnectionException;
 import org.kodmanyagha.infonal.model.ResponseJson;
 import org.kodmanyagha.infonal.model.Status;
 import org.kodmanyagha.infonal.model.userinput.AddUserForm;
@@ -33,35 +33,24 @@ public class UserManagementController {
   @Autowired
   public void setInfonalDataAccess(InfonalDataAccess infonalDataAccess) {
     this.infonalDataAccess = infonalDataAccess;
-
-    logger.debug("--- setting infonal data access object");
-
-    try {
-      this.infonalDataAccess.connect();
-    } catch (DBConnectionException ex) {
-      logger.error("--- error when connection to data source");
-    }
   }
 
   @RequestMapping(value = "/getAllUsers.do", method = RequestMethod.GET)
   public String getAllUsers(Model model) {
     ResponseJson response = new ResponseJson();
+    try {
+      response.setData(infonalDataAccess.getUsers());
+      response.setStatus(Status.OK);
 
-    if (!infonalDataAccess.getDbDriver().isConnected()) {
+      model.addAttribute("data", new Gson().toJson(response));
+
+    } catch (DBConnectionException ex) {
       logger.error("--- Not connected to database");
 
       response.setStatus(Status.ERROR);
       response.setData("Not connected to database");
       model.addAttribute("data", new Gson().toJson(response));
-
-      return "json";
     }
-
-    response.setData(infonalDataAccess.getUsers());
-    response.setStatus(Status.OK);
-
-    model.addAttribute("data", new Gson().toJson(response));
-
     return "json";
   }
 

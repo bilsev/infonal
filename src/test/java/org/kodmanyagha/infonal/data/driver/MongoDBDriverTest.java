@@ -5,6 +5,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.kodmanyagha.infonal.data.driver.mongodb.MongoDBDriver;
+
 public class MongoDBDriverTest extends TestCase {
 
   public void testCheckConnectionStringSyntaxNull() {

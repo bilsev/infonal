@@ -17,7 +17,6 @@
 <script src="images/js/jquery-1.10.2.js"></script>
 <script src="images/js/jquery-ui-1.10.4.custom.min.js"></script>
 
-
 <script src="images/js/app.js"></script>
 
 </head>

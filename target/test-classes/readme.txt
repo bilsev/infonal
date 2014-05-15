@@ -18,7 +18,7 @@ http://www.mkyong.com/spring/how-to-define-bean-properties-in-spring/
 
 - Git:
 https://help.github.com/articles/generating-ssh-keys
-
+http://githowto.com/pushing_a_change
 
 
 - MongoDB:
@@ -28,6 +28,6 @@ https://university.mongodb.com/courses/10gen/M101J/2014_January/courseware/Week_
 - Diğer
 http://sciactive.com/pnotify/
 
---- Konuyla İlgili Blog Adresi ---
+--- Projeyle İlgili Blog Adresi ---
 http://kodmanyagha.org/blog/?p=221
 
