@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.kodmanyagha.infonal.data.InfonalDataAccess;
+import org.kodmanyagha.infonal.data.driver.exception.DBConnectionException;
 import org.kodmanyagha.infonal.model.ResponseJson;
 import org.kodmanyagha.infonal.model.Status;
 import org.kodmanyagha.infonal.model.User;
@@ -34,6 +35,12 @@ public class UserManagementController {
   @Autowired
   public void setInfonalDataAccess(InfonalDataAccess infonalDataAccess) {
     this.infonalDataAccess = infonalDataAccess;
+
+    try {
+      this.infonalDataAccess.connect();
+    } catch (DBConnectionException ex) {
+      logger.error("--- error when connection to data source");
+    }
   }
 
   @RequestMapping(value = "/getAllUsers.do", method = RequestMethod.GET)

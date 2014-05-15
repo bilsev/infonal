@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.kodmanyagha.infonal.util.StringUtilTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.086 sec - in org.kodmanyagha.infonal.util.StringUtilTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.174 sec - in org.kodmanyagha.infonal.util.StringUtilTest

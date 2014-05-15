@@ -8,6 +8,11 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
+	<context-param>
+		<param-name>connectionString</param-name>
+		<param-value>mongodb://127.0.0.1/test/testData</param-value>
+	</context-param>
+
 	<servlet>
 		<servlet-name>ajaxDispatcherServlet</servlet-name>
 		<servlet-class>org.kodmanyagha.infonal.AppDispatcherServlet</servlet-class>

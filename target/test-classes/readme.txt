@@ -11,6 +11,13 @@ http://www.tutorialspoint.com/spring/spring_mvc_hello_world_example.htm
 http://docs.spring.io/docs/Spring-MVC-step-by-step/part1.html
 http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html
 http://stackoverflow.com/questions/5900840/post-nested-object-to-spring-mvc-controller-using-json
+http://www.subshell.com/en/subshell/blog/Spring-3-MVC-Dependency-Injection-for-annotated-Controllers100.html
+http://stackoverflow.com/questions/2175502/spring-application-context-access-web-xml-context-params
+http://www.mkyong.com/spring/how-to-define-bean-properties-in-spring/
+
+
+- Git:
+https://help.github.com/articles/generating-ssh-keys
 
 
 

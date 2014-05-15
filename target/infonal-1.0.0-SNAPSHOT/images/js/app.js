@@ -34,7 +34,8 @@ $(document).ready(function() {
 	var firstname = $( "#firstname" ),
 		lastname = $( "#lastname" ),
 		phone = $( "#phone" ),
-		allFields = $( [] ).add( firstname ).add( lastname ).add( phone ),
+		captcha = $( "#captcha" ),
+		allFields = $( [] ).add( firstname ).add( lastname ).add( phone ).add( captcha ),
 		tips = $( ".validateTips" );
 	
 	function updateTips( t ) {
@@ -80,13 +81,16 @@ $(document).ready(function() {
 				bValid = bValid && checkLength( firstname, "username", 4, 32 );
 				bValid = bValid && checkLength( lastname, "lastname", 4, 32);
 				bValid = bValid && checkLength( phone, "phone", 4, 32 );
+				bValid = bValid && checkLength( captcha, "captcha", 5, 5 );
 	
 				bValid = bValid && checkRegexp( firstname, /^[a-z]([0-9a-z_])+$/i,
-				"İsim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
+					"İsim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
 				bValid = bValid && checkRegexp( lastname, /^[a-z]([0-9a-z_])+$/i,
-				"Soyisim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
+					"Soyisim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
 				bValid = bValid && checkRegexp( phone, /^([\+][0-9]{2} [0-9]{3} [0-9]{3} [0-9]{2} [0-9]{2})+$/, "Telefon alanı formatı : +90 555 123 45 67" );
-				
+				bValid = bValid && checkRegexp( captcha, /^([0-9a-z])+$/i,
+					"Şu karakterlerden oluşabilir: a-z, 0-9." );
+
 				if ( bValid ) {
 					// TODO 14may14 1239 Put ajax code here
 					$.post("ajax/userManagement/addUser.do",
