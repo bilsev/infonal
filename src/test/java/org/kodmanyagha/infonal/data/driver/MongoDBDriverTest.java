@@ -6,13 +6,13 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.kodmanyagha.infonal.data.driver.mongodb.MongoDBDriver;
+import org.kodmanyagha.infonal.data.exception.ConnectionStringParseException;
 
 public class MongoDBDriverTest extends TestCase {
 
-  public void testCheckConnectionStringSyntaxNull() {
-    MongoDBDriver driver = new MongoDBDriver();
-
-    driver.setConnectionString(null);
+  public void testCheckConnectionStringSyntaxNull() throws IllegalArgumentException,
+      ConnectionStringParseException {
+    MongoDBDriver driver = new MongoDBDriver(null);
 
     try {
       driver.checkConnectionStringSyntax();
@@ -21,8 +21,9 @@ public class MongoDBDriverTest extends TestCase {
     }
   }
 
-  public void testCheckConnectionStringSyntax1() {
-    MongoDBDriver driver = new MongoDBDriver();
+  public void testCheckConnectionStringSyntax1() throws IllegalArgumentException,
+      ConnectionStringParseException {
+    MongoDBDriver driver = new MongoDBDriver(null);
 
     // you can increase examples
     List<String> connStrings = Arrays.asList("123123123", "mongo://", "mongodb://aergaertsrht");
@@ -38,8 +39,9 @@ public class MongoDBDriverTest extends TestCase {
     }
   }
 
-  public void testCheckConnectionStringSyntax2() {
-    MongoDBDriver driver = new MongoDBDriver();
+  public void testCheckConnectionStringSyntax2() throws IllegalArgumentException,
+      ConnectionStringParseException {
+    MongoDBDriver driver = new MongoDBDriver(null);
 
     // you can increase examples
     List<String> connStrings = Arrays.asList("mongodb://localhost/test/testData");

@@ -9,13 +9,17 @@
 
 	<context:component-scan base-package="org.kodmanyagha.infonal" />
 
-	<bean id="infonalDataAccess" class="org.kodmanyagha.infonal.data.InfonalDataAccess">
+
+	<bean id="dbDriverFactory" class="org.kodmanyagha.infonal.data.driver.DBDriverFactory">
 		<property name="connectionString" value="${connectionString}" />
+	</bean>
+	<bean id="usersDao" class="org.kodmanyagha.infonal.data.UsersDAO">
+		<property name="dbDriverFactory" ref="dbDriverFactory" />
 	</bean>
 
 	<bean id="userManagementController"
 		class="org.kodmanyagha.infonal.controller.UserManagementController">
-		<property name="infonalDataAccess" ref="infonalDataAccess" />
+		<property name="usersDao" ref="usersDao" />
 	</bean>
 
 	<bean

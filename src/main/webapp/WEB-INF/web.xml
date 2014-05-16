@@ -10,7 +10,7 @@
 
 	<context-param>
 		<param-name>connectionString</param-name>
-		<param-value>mongodb://127.0.0.1/test/testData</param-value>
+		<param-value>mongodb://127.0.0.1/infonal</param-value>
 	</context-param>
 
 	<servlet>

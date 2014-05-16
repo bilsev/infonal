@@ -1,9 +1,38 @@
 
-function btnDuzenleClick(userID) {
-	alert("Düzenle: " + userID);
+function btnDuzenleClick(userID, firstname, lastname, phone) {
+	$("#updateuserid").val(userID);
+	$("#firstname2").val(firstname);
+	$("#lastname2").val(lastname);
+	$("#phone2").val(phone);
+	
+	$( "#update-user-dialog-form" ).dialog("open");
 }
+
 function btnSilClick(userID) {
-	alert("Sil: " + userID);
+	if (!confirm("Bunu silmek istediğinize emin misiniz? Bu işlemin geri dönüşü yoktur."))
+		return false;
+	
+	$.post("ajax/userManagement/removeUser.do",
+	{
+		id: userID
+	},
+	function(data) {
+		$("#divModalMessage").html("<p><strong>"+ data.data +"</strong></p>");
+		$("#divModalMessage").dialog({
+			modal: true,
+			height: 300,
+			width: 500,
+			buttons: {
+				"Tamam": function() {
+					$("#divModalMessage").html();
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		if (data.status == "OK") {
+			fillUsers();
+		}
+	});
 }
 
 function fillUsers() {
@@ -16,8 +45,8 @@ function fillUsers() {
 					"<td>" + value.firstname + "</td>" +
 					"<td>" + value.lastname + "</td>" +
 					"<td>" + value.phone + "</td>" +
-					'<td><input type="button" onclick="btnDuzenleClick('+ value.id +')" id="btnDuzenle'+ value.id +'" value="Düzenle" />'+
-					'<input type="button" onclick="btnSilClick('+ value.id +')" id="btnSil'+ value.id +'" value="Sil" /></td>' +
+					'<td><input type="button" onclick="btnDuzenleClick(\''+ value.id +'\', \''+ value.firstname +'\', \''+ value.lastname +'\', \''+ value.phone+'\' )" id="btnDuzenle'+ value.id +'" value="Düzenle" />'+
+					'<input type="button" onclick="btnSilClick(\''+ value.id +'\')" id="btnSil'+ value.id +'" value="Sil" /></td>' +
 					"</tr>" );
 			});
 		}
@@ -46,11 +75,17 @@ $(document).ready(function() {
 	});
 	
 	var firstname = $( "#firstname" ),
-		lastname = $( "#lastname" ),
-		phone = $( "#phone" ),
-		captcha = $( "#captcha" ),
-		allFields = $( [] ).add( firstname ).add( lastname ).add( phone ).add( captcha ),
-		tips = $( ".validateTips" );
+	lastname = $( "#lastname" ),
+	phone = $( "#phone" ),
+	captcha = $( "#captcha" ),
+	allFields = $( [] ).add( firstname ).add( lastname ).add( phone ).add( captcha ),
+	tips = $( ".validateTips" );
+
+	var firstname2 = $( "#firstname2" ),
+		lastname2 = $( "#lastname2" ),
+		phone2 = $( "#phone2" ),
+		allFields2 = $( [] ).add( firstname2 ).add( lastname2 ).add( phone2 ),
+		tips2 = $( ".validateTips" );
 	
 	function updateTips( t ) {
 		tips
@@ -82,7 +117,7 @@ $(document).ready(function() {
 		}
 	}
 	
-	$( "#dialog-form" ).dialog({
+	$( "#create-user-dialog-form" ).dialog({
 		autoOpen: false,
 		height: 500,
 		width: 500,
@@ -94,19 +129,18 @@ $(document).ready(function() {
 	
 				bValid = bValid && checkLength( firstname, "username", 4, 32 );
 				bValid = bValid && checkLength( lastname, "lastname", 4, 32);
-				bValid = bValid && checkLength( phone, "phone", 4, 32 );
+				bValid = bValid && checkLength( phone, "phone", 0, 32 );
 				bValid = bValid && checkLength( captcha, "captcha", 5, 5 );
 	
 				bValid = bValid && checkRegexp( firstname, /^[a-z]([0-9a-z_])+$/i,
 					"İsim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
 				bValid = bValid && checkRegexp( lastname, /^[a-z]([0-9a-z_])+$/i,
 					"Soyisim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
-				bValid = bValid && checkRegexp( phone, /^([\+][0-9]{2} [0-9]{3} [0-9]{3} [0-9]{2} [0-9]{2})+$/, "Telefon alanı formatı : +90 555 123 45 67" );
+				//bValid = bValid && checkRegexp( phone, /^([\+][0-9]{2} [0-9]{3} [0-9]{3} [0-9]{2} [0-9]{2})+$/, "Telefon alanı formatı : +90 555 123 45 67" );
 				bValid = bValid && checkRegexp( captcha, /^([0-9a-z])+$/i,
 					"Şu karakterlerden oluşabilir: a-z, 0-9." );
 
 				if ( bValid ) {
-					// TODO 14may14 1239 Put ajax code here
 					$.post("ajax/userManagement/addUser.do",
 					{
 						firstname: $("#firstname").val(),
@@ -115,8 +149,77 @@ $(document).ready(function() {
 						captcha: $("#captcha").val()
 					},
 					function(data) {
-						alert(data);
-						fillUsers();
+						$("#divModalMessage").html("<p><strong>"+ data.data +"</strong></p>");
+						$("#divModalMessage").dialog({
+							modal: true,
+							height: 300,
+							width: 500,
+							buttons: {
+								"Tamam": function() {
+									$("#divModalMessage").html();
+									$( this ).dialog( "close" );
+								}
+							}
+						});
+						if (data.status == "OK") {
+							fillUsers();
+						}
+					});
+					$( this ).dialog( "close" );
+				}
+			},
+			"İptal": function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			allFields.val( "" ).removeClass( "ui-state-error" );
+		}
+	});
+
+	$( "#update-user-dialog-form" ).dialog({
+		autoOpen: false,
+		height: 500,
+		width: 500,
+		modal: true,
+		buttons: {
+			"Kaydet": function() {
+				var bValid = true;
+				allFields2.removeClass( "ui-state-error" );
+	
+				bValid = bValid && checkLength( firstname2, "username2", 4, 32 );
+				bValid = bValid && checkLength( lastname2, "lastname2", 4, 32);
+				bValid = bValid && checkLength( phone2, "phone2", 0, 32 );
+	
+				bValid = bValid && checkRegexp( firstname2, /^[a-z]([0-9a-z_])+$/i,
+					"İsim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
+				bValid = bValid && checkRegexp( lastname2, /^[a-z]([0-9a-z_])+$/i,
+					"Soyisim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
+
+				if ( bValid ) {
+					$.post("ajax/userManagement/updateUser.do",
+					{
+						id: $("#updateuserid").val(),
+						firstname: $("#firstname2").val(),
+						lastname: $("#lastname2").val(),
+						phone: $("#phone2").val()
+					},
+					function(data) {
+						$("#divModalMessage").html("<p><strong>"+ data.data +"</strong></p>");
+						$("#divModalMessage").dialog({
+							modal: true,
+							height: 300,
+							width: 500,
+							buttons: {
+								"Tamam": function() {
+									$("#divModalMessage").html();
+									$( this ).dialog( "close" );
+								}
+							}
+						});
+						if (data.status == "OK") {
+							fillUsers();
+						}
 					});
 					$( this ).dialog( "close" );
 				}
@@ -133,7 +236,7 @@ $(document).ready(function() {
 	$( "#create-user" )
 	.button()
 	.click(function() {
-		$( "#dialog-form" ).dialog("open");
+		$( "#create-user-dialog-form" ).dialog("open");
 	});
 	
 	fillUsers();

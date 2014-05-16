@@ -5,14 +5,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
+import org.bson.types.ObjectId;
 import org.kodmanyagha.infonal.data.driver.DBDataObject;
 import org.kodmanyagha.infonal.data.driver.DBDriver;
+import org.kodmanyagha.infonal.data.driver.DBDriverParams;
 import org.kodmanyagha.infonal.data.exception.ConnectionStringParseException;
+import org.kodmanyagha.infonal.data.exception.DBDriverProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BulkWriteOperation;
+import com.mongodb.BulkWriteResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -24,41 +30,40 @@ public class MongoDBDriver extends DBDriver {
 
   private MongoDBDriverConnectionStringPattern connectionStringPattern;
 
-  private String dbHost;
-  private String dbPort;
-  private String dbName;
-  private String dbCollectionName;
-  private String dbUsername;
-  private String dbPassword;
-
   private MongoClient mongoClient;
   private DB mongoDb;
 
-  public MongoDBDriver() {
-    this(null);
-  }
+  private DBDataObject whereDataObject;
+
+  private String fromTableName;
 
   public MongoDBDriver(String connectionString) {
-    logger.debug("--- connectionString: " + connectionString);
-    this.connectionString = connectionString;
+    super(connectionString);
+
+    try {
+      checkConnectionStringSyntax();
+      parseConnectionString();
+
+      logger.debug("--- connection string correct and parsed");
+    } catch (ConnectionStringParseException | IllegalArgumentException e) {
+      logger.error("--- Exception when setting connection string: " + e);
+    }
   }
 
   @Override
   public void connect() {
-    try {
-      checkConnectionStringSyntax();
-      parseConnectionString();
-    } catch (ConnectionStringParseException | IllegalArgumentException e) {
-      logger.error("Exception when setting connection string: " + e);
-    }
+    logger.debug("--- drivers param: " + new Gson().toJson(driverParams));
 
     try {
-      mongoClient = new MongoClient(dbHost);
-      mongoDb = mongoClient.getDB(dbName);
-
+      mongoClient = new MongoClient(driverParams.getDbHost());
+      connected = true;
     } catch (UnknownHostException e) {
       logger.error("Exception when trying to create Mongo Client: " + e);
+      connected = false;
     }
+
+    if (connected)
+      mongoDb = mongoClient.getDB(driverParams.getDbName());
   }
 
   @Override
@@ -83,19 +88,8 @@ public class MongoDBDriver extends DBDriver {
   }
 
   @Override
-  protected void parseConnectionString() throws ConnectionStringParseException {
-    // TODO 15May14 2138 Parse connection string in here
-
-    dbHost = "localhost";
-    dbName = "test";
-    dbCollectionName = "testData";
-    dbUsername = "root";
-    dbPassword = "123456";
-  }
-
-  @Override
-  public List<DBDataObject> getData() {
-    DBCollection collection = mongoDb.getCollection(dbCollectionName);
+  public List<DBDataObject> get(String tableName) {
+    DBCollection collection = mongoDb.getCollection(tableName);
     DBCursor cursor = collection.find();
     List<DBDataObject> dbDataObjects = new ArrayList<>();
 
@@ -120,5 +114,105 @@ public class MongoDBDriver extends DBDriver {
     }
 
     return dbDataObjects;
+  }
+
+  @Override
+  public void select(List<String> fields) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void refreshDriver() {
+    whereDataObject = null;
+    fromTableName = null;
+  }
+
+  @Override
+  public void parseConnectionString() throws ConnectionStringParseException {
+    // TODO 16May14 0417 Write necessary codes here. Never use hardcode.
+    driverParams = new DBDriverParams();
+    driverParams.setDbHost("localhost");
+    driverParams.setDbPort("");
+    driverParams.setDbName("infonal");
+    driverParams.setDbCollectionName("users");
+    driverParams.setDbUsername("root");
+    driverParams.setDbPassword("123456");
+  }
+
+  @Override
+  public void from(String tableName) {
+    this.fromTableName = tableName;
+  }
+
+  @Override
+  public List<DBDataObject> get() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void where(DBDataObject dbDataObject) {
+    this.whereDataObject = dbDataObject;
+  }
+
+  // TODO 16May14 2108 Write test codes for this
+  @Override
+  public void insert(String collectionName, DBDataObject data) {
+    if (data == null)
+      throw new IllegalArgumentException("Data can not be null");
+    if (collectionName == null || collectionName.trim().length() == 0)
+      throw new IllegalArgumentException("Collection name is null or has zero length");
+
+    BasicDBObject basicDBObject = new BasicDBObject();
+    Iterator<String> keysetIter = data.getValues().keySet().iterator();
+    String key;
+
+    while (keysetIter.hasNext()) {
+      key = keysetIter.next();
+      basicDBObject.append(key, data.getValues().get(key));
+    }
+    DBCollection collection = mongoDb.getCollection(collectionName);
+    collection.insert(basicDBObject);
+  }
+
+  @Override
+  public void delete(String tableName, DBDataObject data) {
+    BasicDBObject basicDBObject = new BasicDBObject();
+    basicDBObject.append("_id", new ObjectId(data.getValues().get("_id").toString()));
+
+    DBCollection collection = mongoDb.getCollection(tableName);
+    BulkWriteOperation builder = collection.initializeOrderedBulkOperation();
+    builder.find(basicDBObject).removeOne();
+
+    BulkWriteResult result = builder.execute();
+
+    if (result.isAcknowledged()) {
+      logger.debug("--- user deleted: " + data.getValues().get("_id"));
+    } else {
+      logger.debug("--- user can not deleted: " + data.getValues().get("_id"));
+    }
+  }
+
+  @Override
+  public void update(String tableName, DBDataObject data) throws DBDriverProcessException {
+    if (whereDataObject == null)
+      throw new DBDriverProcessException("You have to call where method with a correct");
+
+    BasicDBObject searchDBObject = new BasicDBObject();
+    Iterator<String> whereDataObjValuesIter = whereDataObject.getValues().keySet().iterator();
+    String key;
+    while (whereDataObjValuesIter.hasNext()) {
+      key = whereDataObjValuesIter.next();
+
+      searchDBObject.append(key, new ObjectId(whereDataObject.getValues().get(key).toString()));
+    }
+
+    BasicDBObject updatedDBObject = new BasicDBObject();
+    updatedDBObject.append("firstname", data.getValues().get("firstname"));
+    updatedDBObject.append("lastname", data.getValues().get("lastname"));
+    updatedDBObject.append("phone", data.getValues().get("phone"));
+
+    mongoDb.getCollection(tableName).update(searchDBObject, updatedDBObject);
   }
 }

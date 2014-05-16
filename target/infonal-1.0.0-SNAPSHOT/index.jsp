@@ -24,21 +24,39 @@
 <body>
 	<div class="body-container">
 
-		<div id="dialog-form" title="Create new user">
-			<p class="validateTips">Tüm alanları doldurunuz.</p>
+		<div id="create-user-dialog-form" title="Create new user">
+			<p class="validateTips">Yıldızlı alanları doldurmak zorunludur.</p>
 
 			<form id="formCreateUser">
 				<fieldset id="fieldsetCreateUser">
-					<label for="firstname">İsim</label> <input type="text"
+					<label for="firstname">İsim *</label> <input type="text"
 						name="firstname" id="firstname"
 						class="text ui-widget-content ui-corner-all"> <label
-						for="lastname">Soyisim</label> <input type="text" name="lastname"
+						for="lastname">Soyisim *</label> <input type="text" name="lastname"
 						id="lastname" value="" class="text ui-widget-content ui-corner-all">
 					<label for="phone">Telefon</label> <input type="text"
 						name="phone" id="phone" value=""
 						class="text ui-widget-content ui-corner-all">
 					<label for="captcha"><img src="captcha.jpg" /></label> <input type="text"
 						name="captcha" id="captcha" value=""
+						class="text ui-widget-content ui-corner-all">
+				</fieldset>
+			</form>
+		</div>
+		
+		<div id="update-user-dialog-form" title="Update user">
+			<p class="validateTips">Başında yıldız olan alanları doldurmak zorunludur.</p>
+
+			<form id="formUpdateUser">
+			<input type="hidden" name="updateuserid" id="updateuserid" value="" />
+				<fieldset id="fieldsetCreateUser">
+					<label for="firstname2">İsim *</label> <input type="text"
+						name="firstname2" id="firstname2"
+						class="text ui-widget-content ui-corner-all"> <label
+						for="lastname2">Soyisim *</label> <input type="text" name="lastname2"
+						id="lastname2" value="" class="text ui-widget-content ui-corner-all">
+					<label for="phone2">Telefon</label> <input type="text"
+						name="phone2" id="phone2" value=""
 						class="text ui-widget-content ui-corner-all">
 				</fieldset>
 			</form>

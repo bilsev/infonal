@@ -1,16 +1,16 @@
 package org.kodmanyagha.infonal.model.userinput;
 
 public class EditUserForm {
-  private int id;
+  private String id;
   private String firstname;
   private String lastname;
   private String phone;
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(String id) {
     this.id = id;
   }
 
