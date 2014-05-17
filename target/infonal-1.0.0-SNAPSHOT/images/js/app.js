@@ -132,9 +132,9 @@ $(document).ready(function() {
 				bValid = bValid && checkLength( phone, "phone", 0, 32 );
 				bValid = bValid && checkLength( captcha, "captcha", 5, 5 );
 	
-				bValid = bValid && checkRegexp( firstname, /^[a-z]([0-9a-z_])+$/i,
+				bValid = bValid && checkRegexp( firstname, /^[a-zA-ZğüşçöıĞÜİŞÇÖ]([0-9a-zA-ZğüşçöıĞÜİŞÇÖ_ ])+$/i,
 					"İsim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
-				bValid = bValid && checkRegexp( lastname, /^[a-z]([0-9a-z_])+$/i,
+				bValid = bValid && checkRegexp( lastname, /^[a-zA-ZğüşçöıĞÜİŞÇÖ]([0-9a-zA-ZğüşçöıĞÜİŞÇÖ_ ])+$/i,
 					"Soyisim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
 				//bValid = bValid && checkRegexp( phone, /^([\+][0-9]{2} [0-9]{3} [0-9]{3} [0-9]{2} [0-9]{2})+$/, "Telefon alanı formatı : +90 555 123 45 67" );
 				bValid = bValid && checkRegexp( captcha, /^([0-9a-z])+$/i,
@@ -191,9 +191,9 @@ $(document).ready(function() {
 				bValid = bValid && checkLength( lastname2, "lastname2", 4, 32);
 				bValid = bValid && checkLength( phone2, "phone2", 0, 32 );
 	
-				bValid = bValid && checkRegexp( firstname2, /^[a-z]([0-9a-z_])+$/i,
+				bValid = bValid && checkRegexp( firstname2, /^[a-zA-ZğüşçöıĞÜİŞÇÖ]([0-9a-zA-ZğüşçöıĞÜİŞÇÖ_ ])+$/i,
 					"İsim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
-				bValid = bValid && checkRegexp( lastname2, /^[a-z]([0-9a-z_])+$/i,
+				bValid = bValid && checkRegexp( lastname2, /^[a-zA-ZğüşçöıĞÜİŞÇÖ]([0-9a-zA-ZğüşçöıĞÜİŞÇÖ_ ])+$/i,
 					"Soyisim şu karakterlerden oluşabilir: a-z, 0-9, alt çizgi, ve alfanümerik bir karakterle başlamalı." );
 
 				if ( bValid ) {
@@ -236,6 +236,7 @@ $(document).ready(function() {
 	$( "#create-user" )
 	.button()
 	.click(function() {
+		$("#imgCaptcha").attr("src", "captcha.jpg?" + new Date().getTime());
 		$( "#create-user-dialog-form" ).dialog("open");
 	});
 	

@@ -1,8 +1,5 @@
 package org.kodmanyagha.infonal.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.kodmanyagha.infonal.data.UsersDAO;
@@ -19,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -55,20 +50,6 @@ public class UserManagementController {
       response.setData(ex.getLocalizedMessage());
       model.addAttribute("data", new Gson().toJson(response));
     }
-    return "json";
-  }
-
-  @RequestMapping(value = "/testMethod.do", method = RequestMethod.GET)
-  public String testMethod(Model model) {
-    List<String> exampleList = new ArrayList<>();
-    if (this.usersDao == null)
-      exampleList.add("infonalDataAccess is null");
-    else
-      // exampleList.add(this.usersDao.getConnectionString());
-      exampleList.add(this.usersDao.toString());
-
-    model.addAttribute("data", new Gson().toJson(exampleList));
-
     return "json";
   }
 
@@ -138,7 +119,6 @@ public class UserManagementController {
     model.addAttribute("data", new Gson().toJson(response));
     return "json";
   }
-
 
   @RequestMapping(value = "/removeUser.do", method = RequestMethod.POST)
   public String removeUser(@ModelAttribute("deleteUserInfo") EditUserForm userInfo, Model model) {

@@ -37,7 +37,7 @@
 					<label for="phone">Telefon</label> <input type="text"
 						name="phone" id="phone" value=""
 						class="text ui-widget-content ui-corner-all">
-					<label for="captcha"><img src="captcha.jpg" /></label> <input type="text"
+					<label for="captcha"><img src="captcha.jpg" id="imgCaptcha" /></label> <input type="text"
 						name="captcha" id="captcha" value=""
 						class="text ui-widget-content ui-corner-all">
 				</fieldset>
@@ -81,7 +81,7 @@
 
 	</div>
 	<div id="divModalMessage"></div>
-	
+	<div class="modal"></div>
 </body>
 </html>
 

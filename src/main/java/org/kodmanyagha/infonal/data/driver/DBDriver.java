@@ -13,8 +13,6 @@ public abstract class DBDriver {
   protected String connectionString;
   protected boolean connected = false;
 
-  protected DBDriverParams driverParams;
-
   public DBDriver(String connectionString) {
     this.connectionString = connectionString;
   }
@@ -40,12 +38,6 @@ public abstract class DBDriver {
    * @throws ConnectionStringSyntaxException
    */
   abstract public void checkConnectionStringSyntax() throws ConnectionStringSyntaxException;
-
-  /***********************
-   * 
-   * @throws ConnectionStringParseException
-   */
-  abstract public void parseConnectionString() throws ConnectionStringParseException;
 
   /********************************************
    * Connect to backend database or a data source.

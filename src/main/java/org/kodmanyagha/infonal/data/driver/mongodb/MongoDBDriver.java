@@ -9,7 +9,6 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.kodmanyagha.infonal.data.driver.DBDataObject;
 import org.kodmanyagha.infonal.data.driver.DBDriver;
-import org.kodmanyagha.infonal.data.driver.DBDriverParams;
 import org.kodmanyagha.infonal.data.exception.ConnectionStringParseException;
 import org.kodmanyagha.infonal.data.exception.DBDriverProcessException;
 import org.slf4j.Logger;
@@ -32,7 +31,7 @@ public class MongoDBDriver extends DBDriver {
 
   private MongoClient mongoClient;
   private DB mongoDb;
-
+  private MongoDBDriverParams driverParams;
   private DBDataObject whereDataObject;
 
   private String fromTableName;
@@ -64,6 +63,15 @@ public class MongoDBDriver extends DBDriver {
 
     if (connected)
       mongoDb = mongoClient.getDB(driverParams.getDbName());
+  }
+
+  private void parseConnectionString() throws ConnectionStringParseException {
+    if (connectionStringPattern.equals(MongoDBDriverConnectionStringPattern.PATTERN_ONE))
+      driverParams = connectionStringPattern.parseForPatternOne(connectionString);
+    else if (connectionStringPattern.equals(MongoDBDriverConnectionStringPattern.PATTERN_TWO))
+      driverParams = connectionStringPattern.parseForPatternTwo(connectionString);
+    else if (connectionStringPattern.equals(MongoDBDriverConnectionStringPattern.PATTERN_THREE))
+      driverParams = connectionStringPattern.parseForPatternThree(connectionString);
   }
 
   @Override
@@ -128,17 +136,6 @@ public class MongoDBDriver extends DBDriver {
     fromTableName = null;
   }
 
-  @Override
-  public void parseConnectionString() throws ConnectionStringParseException {
-    // TODO 16May14 0417 Write necessary codes here. Never use hardcode.
-    driverParams = new DBDriverParams();
-    driverParams.setDbHost("localhost");
-    driverParams.setDbPort("");
-    driverParams.setDbName("infonal");
-    driverParams.setDbCollectionName("users");
-    driverParams.setDbUsername("root");
-    driverParams.setDbPassword("123456");
-  }
 
   @Override
   public void from(String tableName) {

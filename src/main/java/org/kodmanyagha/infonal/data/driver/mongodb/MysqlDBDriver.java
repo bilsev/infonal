@@ -45,12 +45,6 @@ public class MysqlDBDriver extends DBDriver {
   }
 
   @Override
-  public void parseConnectionString() throws ConnectionStringParseException {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public void from(String tableName) {
     // TODO Auto-generated method stub
   }
@@ -82,7 +76,7 @@ public class MysqlDBDriver extends DBDriver {
   @Override
   public void update(String tableName, DBDataObject data) {
     // TODO Auto-generated method stub
-    
+
   }
 
 }
