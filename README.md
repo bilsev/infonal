@@ -35,5 +35,5 @@ https://university.mongodb.com/courses/10gen/M101J/2014_January/courseware/Week_
 http://sciactive.com/pnotify/
 
 --- Projeyle İlgili Blog Adresi ---
-http://kodmanyagha.org/blog/?p=221
+http://kodmanyagha.com/blog/?p=221
 
